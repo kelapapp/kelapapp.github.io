@@ -11,22 +11,30 @@
             text-align: center;
             padding: 20px;
             transition: background-color 0.5s;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .container {
             max-width: 600px;
-            margin: 0 auto;
+            width: 90%;
+            margin: 20px auto;
             background-color: white;
             padding: 30px;
             border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         h1 {
             color: #e91e63;
+            margin-bottom: 20px;
         }
         p {
             font-size: 18px;
             line-height: 1.6;
             color: #333;
+            margin-bottom: 20px;
         }
         .btn {
             background-color: #e91e63;
@@ -37,10 +45,12 @@
             border-radius: 25px;
             cursor: pointer;
             margin: 10px;
-            transition: transform 0.3s;
+            transition: all 0.3s;
+            min-width: 120px;
         }
         .btn:hover {
             transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(233, 30, 99, 0.3);
         }
         .hidden {
             display: none;
@@ -49,6 +59,7 @@
             font-size: 60px;
             color: #e91e63;
             animation: pulse 1.5s infinite;
+            margin: 20px 0;
         }
         @keyframes pulse {
             0% { transform: scale(1); }
@@ -64,24 +75,39 @@
             overflow: hidden;
             background-size: cover;
             background-position: center;
+            background-color: #f8bbd0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #e91e63;
+            font-size: 24px;
+        }
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="photo-frame" id="photo"></div>
-        <h1>Hai [Baby]!</h1>
+        <div class="photo-frame" id="photo">❤️</div>
+        <h1 id="greeting">Hai Baby!</h1>
         
         <div id="page1">
             <p>Aku punya sesuatu yang ingin aku sampaikan...</p>
             <p>Selama ini, setiap kali bertemu denganmu, hatiku selalu berbunga-bunga.</p>
-            <button class="btn" onclick="nextPage()">Lanjut</button>
+            <div class="btn-container">
+                <button class="btn" onclick="nextPage()">Lanjut</button>
+            </div>
         </div>
         
         <div id="page2" class="hidden">
             <p>Aku sadar bahwa perasaanku padamu bukan sekadar teman biasa.</p>
             <p>Kamu membuat hariku lebih cerah hanya dengan hadirmu.</p>
-            <button class="btn" onclick="nextPage()">Lanjut</button>
+            <div class="btn-container">
+                <button class="btn" onclick="nextPage()">Lanjut</button>
+            </div>
         </div>
         
         <div id="page3" class="hidden">
@@ -90,8 +116,10 @@
             
             <div class="heart">❤️</div>
             
-            <button class="btn" onclick="showResponse(true)">Iya</button>
-            <button class="btn" onclick="showResponse(false)">Tidak</button>
+            <div class="btn-container">
+                <button class="btn" onclick="showResponse(true)">Iya</button>
+                <button class="btn" onclick="showResponse(false)" style="background-color: #9e9e9e;">Tidak</button>
+            </div>
         </div>
         
         <div id="response-yes" class="hidden">
@@ -105,6 +133,7 @@
             <h1>😢</h1>
             <p>Aku menghargai kejujuranmu.</p>
             <p>Semoga kita tetap bisa berteman baik.</p>
+            <div class="heart">💔</div>
         </div>
     </div>
 
@@ -112,13 +141,33 @@
         let currentPage = 1;
         const totalPages = 3;
         
-        // Ganti dengan URL foto dia (opsional)
-        document.getElementById('photo').style.backgroundImage = "url('https://i.ibb.co.com/LXykPFML/IMG-20230617-WA0010.jpg')";
+        // Customize these values
+        const config = {
+            name: "Baby",
+            photoUrl: "https://i.ibb.co.com/LXykPFML/IMG-20230617-WA0010.jpg",
+            fallbackPhotoText: "❤️"
+        };
+        
+        // Initialize the page
+        function init() {
+            document.getElementById('greeting').textContent = `Hai ${config.name}!`;
+            
+            const photoElement = document.getElementById('photo');
+            if (config.photoUrl) {
+                photoElement.style.backgroundImage = `url('${config.photoUrl}')`;
+                photoElement.textContent = '';
+            } else {
+                photoElement.textContent = config.fallbackPhotoText;
+            }
+        }
         
         function nextPage() {
             document.getElementById('page' + currentPage).classList.add('hidden');
             currentPage++;
             document.getElementById('page' + currentPage).classList.remove('hidden');
+            
+            // Scroll to top of container for better mobile experience
+            document.querySelector('.container').scrollTop = 0;
         }
         
         function showResponse(isYes) {
@@ -130,10 +179,13 @@
                 document.getElementById('response-no').classList.remove('hidden');
                 document.body.style.backgroundColor = "#e0e0e0";
             }
+            
+            // Scroll to top of container
+            document.querySelector('.container').scrollTop = 0;
         }
         
-        // Ganti [Nama Dia] dengan nama aslinya
-        document.querySelector('h1').innerText = "Hai Baby!";
+        // Initialize when page loads
+        window.onload = init;
     </script>
 </body>
-</html>
+</html> 
